@@ -21,6 +21,7 @@ import {
 const Header: React.FC = () => {
   const [session, loading] = useSession();
   const router = useRouter();
+  const color = useColorModeValue('gray.200', 'gray.900');
   const isActive: (pathname: string) => boolean = (pathname) =>
     router.pathname === pathname;
 
@@ -30,7 +31,7 @@ const Header: React.FC = () => {
 
   return (
     <>
-      <Box bg={useColorModeValue("gray.200", "gray.900")} px={8}>
+      <Box bg={color} px={8}>
         <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
           <HStack spacing={8} alignItems={"center"}>
             <Link href="/">
