@@ -16,12 +16,4 @@ const options = {
   ],
   adapter: PrismaAdapter(prisma),
   secret: process.env.SECRET,
-  callbacks: {
-    redirect({ url, baseUrl }) {
-      if (url.startsWith(baseUrl)) return url;
-      // Allows relative callback URLs
-      else if (url.startsWith("/")) return new URL(url, baseUrl).toString();
-      return baseUrl;
-    },
-  },
 };
