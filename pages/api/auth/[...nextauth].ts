@@ -14,6 +14,9 @@ const options = {
       clientSecret: process.env.GITHUB_SECRET,
     }),
   ],
+  params: {
+    grant_type: "authorization_code",
+  },
   adapter: PrismaAdapter(prisma),
   secret: process.env.SECRET,
 };
