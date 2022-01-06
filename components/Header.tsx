@@ -108,7 +108,7 @@ const Header: React.FC = () => {
               direction={"row"}
               spacing={6}
             >
-              <Link href="/api/auth/signin">
+              <Link passHref href="/api/auth/signin">
                 <Button
                   leftIcon={<UnlockIcon />}
                   display={{ base: "none", md: "inline-flex" }}
