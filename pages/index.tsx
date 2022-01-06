@@ -14,7 +14,7 @@ import {
 } from "@chakra-ui/layout";
 import { useColorModeValue } from "@chakra-ui/system";
 import Router from "next/router";
-import { useSession } from "next-auth/client";
+import { useSession } from "next-auth/react";
 import { Avatar, Spinner } from "@chakra-ui/react";
 import prisma from "../lib/prisma";
 
@@ -24,7 +24,8 @@ interface BlogAuthorPost {
 }
 
 export const BlogAuthor: React.FC<BlogAuthorPost> = (props) => {
-  const [session, loading] = useSession();
+  const { data: session, status } = useSession();
+  const loading = status === "loading";
   if (loading) {
     return (
       <Stack direction="row" spacing={4}>
@@ -82,6 +83,7 @@ type Props = {
 };
 
 const Blog: React.FC<Props> = (props) => {
+  const color = useColorModeValue("gray.700", "gray.200");
   return (
     <Layout>
       <Container maxW="container.xl" py={12}>
@@ -128,12 +130,7 @@ const Blog: React.FC<Props> = (props) => {
                 </Link>
               </Heading>
               <Link textDecoration="none" _hover={{ textDecoration: "none" }}>
-                <Text
-                  as="p"
-                  marginTop="2"
-                  color={useColorModeValue("gray.700", "gray.200")}
-                  fontSize="lg"
-                >
+                <Text as="p" marginTop="2" color={color} fontSize="lg">
                   {post.content}
                 </Text>
               </Link>

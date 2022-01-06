@@ -1,7 +1,7 @@
 import React from "react";
 import { GetServerSideProps } from "next";
 import Layout from "../components/Layout";
-import { useSession, getSession } from "next-auth/client";
+import { useSession, getSession } from "next-auth/react";
 import {
   Avatar,
   Box,
@@ -20,7 +20,9 @@ import Router from "next/router";
 import prisma from "../lib/prisma";
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  // const session = await getSession({ req });
   const session = await getSession({ req });
+
   if (!session) {
     res.statusCode = 403;
     return { props: { drafts: [] } };
@@ -64,7 +66,8 @@ interface BlogAuthorProps {
 }
 
 export const BlogAuthor: React.FC<BlogAuthorProps> = (props) => {
-  const [session, loading] = useSession();
+  const { data: session, status } = useSession();
+  const loading = status === "loading";
   if (loading) {
     return <div>Loading ...</div>;
   }
@@ -86,17 +89,16 @@ export const BlogAuthor: React.FC<BlogAuthorProps> = (props) => {
 };
 
 const Drafts: React.FC<Props> = (props) => {
-  const [session] = useSession();
+  const { data: session } = useSession();
+
+  const color = useColorModeValue("gray.50", "gray.800");
+  const color2 = useColorModeValue("blue.50", "blue.900");
+  const color3 = useColorModeValue("gray.700", "gray.200");
 
   if (!session) {
     return (
       <Layout>
-        <Flex
-          minH={"100vh"}
-          align={"center"}
-          justify={"center"}
-          bg={useColorModeValue("gray.50", "gray.800")}
-        >
+        <Flex minH={"100vh"} align={"center"} justify={"center"} bg={color}>
           <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
             <Stack align={"center"}>
               <Heading fontSize={"4xl"}>Sign in to your account</Heading>
@@ -120,7 +122,7 @@ const Drafts: React.FC<Props> = (props) => {
               color={"blue.400"}
               fontWeight={600}
               fontSize={"sm"}
-              bg={useColorModeValue("blue.50", "blue.900")}
+              bg={color2}
               p={2}
               alignSelf={"flex-start"}
               rounded={"md"}
@@ -155,12 +157,7 @@ const Drafts: React.FC<Props> = (props) => {
                   {post.title}
                 </Link>
               </Heading>
-              <Text
-                as="p"
-                marginTop="2"
-                color={useColorModeValue("gray.700", "gray.200")}
-                fontSize="lg"
-              >
+              <Text as="p" marginTop="2" color={color3} fontSize="lg">
                 {post.content}
               </Text>
               <BlogAuthor name={post.author.name} date={post.createdAt} />

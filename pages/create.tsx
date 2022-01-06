@@ -13,17 +13,21 @@ import {
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
-import { useSession } from "next-auth/client";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import Router from "next/router";
 import React, { useState } from "react";
 import Layout from "../components/Layout";
 
 const Post = () => {
-  const [session, loading] = useSession();
+  const { data: session, status } = useSession();
+  const loading = status === "loading";
+
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const toast = useToast();
+  const color = useColorModeValue("gray.50", "gray.800");
+  const color2 = useColorModeValue("white", "gray.700");
 
   if (loading) {
     return <div>Loading...</div>;
@@ -47,12 +51,7 @@ const Post = () => {
   if (!session) {
     return (
       <Layout>
-        <Flex
-          minH={"100vh"}
-          align={"center"}
-          justify={"center"}
-          bg={useColorModeValue("gray.50", "gray.800")}
-        >
+        <Flex minH={"100vh"} align={"center"} justify={"center"} bg={color}>
           <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
             <Stack align={"center"}>
               <Heading fontSize={"4xl"}>Sign in to your account</Heading>
@@ -76,12 +75,7 @@ const Post = () => {
               Create a new post ✌️
             </Text>
           </Stack>
-          <Box
-            rounded={"lg"}
-            bg={useColorModeValue("white", "gray.700")}
-            boxShadow={"lg"}
-            p={8}
-          >
+          <Box rounded={"lg"} bg={color2} boxShadow={"lg"} p={8}>
             <Stack spacing={4}>
               <FormControl id="title">
                 <Input

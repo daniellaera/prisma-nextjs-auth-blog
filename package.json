@@ -14,16 +14,16 @@
     "@chakra-ui/react": "^1.6.5",
     "@emotion/react": "^11.4.0",
     "@emotion/styled": "^11.3.0",
-    "@prisma/client": "^2.28.0",
+    "@next-auth/prisma-adapter": "^1.0.1",
+    "@prisma/client": "^2.30.3",
     "@types/node": "^16.4.13",
     "@types/react": "^17.0.16",
     "babel-plugin-superjson-next": "^0.3.0",
     "framer-motion": "^4.1.17",
-    "next": "11.0.1",
-    "next-auth": "^3.27.3",
-    "prisma": "^2.28.0",
-    "react": "17.0.2",
-    "react-dom": "17.0.2",
+    "next": "^12.0.7",
+    "next-auth": "^4.0.6",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
     "react-icons": "^4.2.0",
     "react-markdown": "^6.0.3",
     "superjson": "^1.7.5",
@@ -32,6 +32,7 @@
   },
   "devDependencies": {
     "eslint": "7.32.0",
-    "eslint-config-next": "11.0.1"
+    "eslint-config-next": "11.0.1",
+    "prisma": "^3.7.0"
   }
 }

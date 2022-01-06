@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { GetServerSideProps } from "next";
 import Router from "next/router";
-import { useSession } from "next-auth/client";
+import { useSession } from "next-auth/react";
 import { Button } from "@chakra-ui/button";
 import { CheckCircleIcon, DeleteIcon } from "@chakra-ui/icons";
 import {
@@ -75,7 +75,9 @@ export type PostProps = {
 };
 
 export const BlogAuthor: React.FC<BlogAuthorProps> = (props) => {
-  const [session, loading] = useSession();
+  const { data: session, status } = useSession();
+  const loading = status === "loading";
+
   if (loading) {
     return <div>Loading ...</div>;
   }
@@ -97,13 +99,17 @@ export const BlogAuthor: React.FC<BlogAuthorProps> = (props) => {
 };
 
 const Post: React.FC<PostProps> = (props) => {
+  const { data: session, status } = useSession();
+  const loading = status === "loading";
+
+  const color = useColorModeValue("gray.700", "gray.200");
+
   const toast = useToast();
   const [isDelete, setIsDelete] = useState(false);
   const onCloseDelete = () => setIsDelete(false);
   const [isPublish, setIsPublish] = useState(false);
   const onClosePublish = () => setIsPublish(false);
   const cancelRef = useRef();
-  const [session, loading] = useSession();
 
   if (loading) {
     return <div>Authenticating ...</div>;
@@ -132,7 +138,7 @@ const Post: React.FC<PostProps> = (props) => {
               </AlertDialogHeader>
 
               <AlertDialogBody>
-                Are you sure? You can't undo this action afterwards.
+                {`Are you sure? You can't undo this action afterwards.`}
               </AlertDialogBody>
 
               <AlertDialogFooter>
@@ -171,7 +177,7 @@ const Post: React.FC<PostProps> = (props) => {
               </AlertDialogHeader>
 
               <AlertDialogBody>
-                Are you sure? You can't undo this action afterwards.
+                {`Are you sure? You can't undo this action afterwards.`}
               </AlertDialogBody>
 
               <AlertDialogFooter>
@@ -218,12 +224,7 @@ const Post: React.FC<PostProps> = (props) => {
                   {title}
                 </Link>
               </Heading>
-              <Text
-                as="p"
-                marginTop="2"
-                color={useColorModeValue("gray.700", "gray.200")}
-                fontSize="lg"
-              >
+              <Text as="p" marginTop="2" color={color} fontSize="lg">
                 {props.content}
               </Text>
               <BlogAuthor name={props.author.name} date={props.createdAt} />

@@ -1,13 +1,13 @@
 import "../styles/globals.css";
 import { ChakraProvider } from "@chakra-ui/react";
-import { Provider } from "next-auth/client";
+import { SessionProvider } from "next-auth/react";
 
-function MyApp({ Component, pageProps }) {
+function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   return (
     <ChakraProvider>
-      <Provider>
+      <SessionProvider session={session} refetchInterval={5 * 60}>
         <Component {...pageProps} />
-      </Provider>
+      </SessionProvider>
     </ChakraProvider>
   );
 }

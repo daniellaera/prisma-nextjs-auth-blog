@@ -4,24 +4,30 @@ import {
   Button,
   Flex,
   HStack,
+  IconButton,
   Stack,
+  useColorMode,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { signOut, useSession } from "next-auth/client";
+import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import {
   ChatIcon,
   CopyIcon,
   LockIcon,
+  MoonIcon,
   PlusSquareIcon,
+  SunIcon,
   UnlockIcon,
 } from "@chakra-ui/icons";
 
 const Header: React.FC = () => {
-  const [session, loading] = useSession();
+  const { data: session, status } = useSession();
+  const loading = status === "loading";
   const router = useRouter();
-  const color = useColorModeValue('gray.200', 'gray.900');
+  const { colorMode, toggleColorMode } = useColorMode();
+  const color = useColorModeValue("gray.200", "gray.900");
   const isActive: (pathname: string) => boolean = (pathname) =>
     router.pathname === pathname;
 
@@ -34,7 +40,7 @@ const Header: React.FC = () => {
       <Box bg={color} px={8}>
         <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
           <HStack spacing={8} alignItems={"center"}>
-            <Link href="/">
+            <Link passHref href="/">
               <Button
                 size={"sm"}
                 isActive={isActive("/")}
@@ -47,7 +53,7 @@ const Header: React.FC = () => {
             </Link>
             {session ? (
               <>
-                <Link href="/drafts">
+                <Link passHref href="/drafts">
                   <Button
                     size={"sm"}
                     isActive={isActive("/drafts")}
@@ -58,7 +64,7 @@ const Header: React.FC = () => {
                     Drafts
                   </Button>
                 </Link>
-                <Link href="/create">
+                <Link passHref href="/create">
                   <Button
                     size={"sm"}
                     isActive={isActive("/create")}
@@ -86,6 +92,14 @@ const Header: React.FC = () => {
                 Logout
               </Button>
               <Avatar src={session.user.image} size="sm" name="Daniel Laera" />
+              <IconButton
+                ml={5}
+                aria-label="toggle theme"
+                icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
+                variant="ghost"
+                size="md"
+                onClick={toggleColorMode}
+              />
             </Flex>
           ) : (
             <Stack
