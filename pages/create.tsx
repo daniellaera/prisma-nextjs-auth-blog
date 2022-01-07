@@ -120,7 +120,7 @@ const Post = () => {
                   >
                     Create
                   </Button>
-                  <Link href="/">
+                  <Link passHref href="/">
                     <Button
                       leftIcon={<CloseIcon />}
                       colorScheme="red"
