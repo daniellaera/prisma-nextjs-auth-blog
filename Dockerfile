@@ -8,6 +8,7 @@ WORKDIR /usr/src/app
 
 # Installing dependencies
 COPY package*.json /usr/src/app/
+COPY prisma ./prisma/
 RUN npm install
 
 # Copying source files
@@ -18,8 +19,6 @@ RUN npm run build
 EXPOSE 3000
 
 RUN su node -c "yarn global add prisma"
-
-RUN "npx prisma generate"
 
 # Running the app
 CMD "npm" "run" "dev"
