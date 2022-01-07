@@ -19,5 +19,7 @@ EXPOSE 3000
 
 RUN su node -c "yarn global add prisma"
 
+RUN "prisma generate"
+
 # Running the app
 CMD "npm" "run" "dev"
