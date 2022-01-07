@@ -17,5 +17,7 @@ COPY . /usr/src/app
 RUN npm run build
 EXPOSE 3000
 
+RUN su node -c "yarn global add prisma"
+
 # Running the app
 CMD "npm" "run" "dev"
