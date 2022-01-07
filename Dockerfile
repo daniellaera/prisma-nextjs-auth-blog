@@ -1,4 +1,4 @@
-FROM node:16
+FROM node:16 AS builder
 
 ENV PORT 3000
 
@@ -23,8 +23,11 @@ RUN npm run build
 
 FROM node:16
 
-COPY /app/package.json ./package.json
-COPY /app/prisma ./prisma
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/prisma ./prisma
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 EXPOSE 3000
 
