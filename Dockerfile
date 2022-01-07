@@ -13,6 +13,9 @@ COPY package*.json ./
 # Install app dependencies
 RUN npm install
 
+# Generate Prisma client
+RUN cd server; npm run prisma:generate;
+
 COPY . .
 
 RUN npm run build
