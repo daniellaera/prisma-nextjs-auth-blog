@@ -1,4 +1,4 @@
-FROM node:16 AS builder
+FROM node:16
 
 ENV PORT 3000
 
@@ -15,7 +15,7 @@ COPY prisma ./prisma/
 RUN npm install
 
 # Generate Prisma client
-RUN cd server; npm run prisma:generate;
+RUN npm run prisma:generate;
 
 COPY . .
 
@@ -23,13 +23,10 @@ RUN npm run build
 
 FROM node:16
 
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/prisma ./prisma
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY /app/package.json ./package.json
+COPY /app/prisma ./prisma
 
 EXPOSE 3000
 
 # Running the app
-CMD [  "npm", "run", "dev" ]
+CMD "npm" "run" "dev"
