@@ -1,4 +1,4 @@
-FROM node:16
+FROM node:16 AS builder
 
 ENV PORT 3000
 
@@ -15,6 +15,8 @@ RUN npm install
 COPY . .
 
 RUN npm run build
+
+FROM node:14
 
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package*.json ./
