@@ -3,22 +3,25 @@ FROM node:16
 ENV PORT 3000
 
 # Create app directory
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
+WORKDIR /app
 
-# Installing dependencies
-COPY package*.json /usr/src/app/
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
+COPY package*.json ./
 COPY prisma ./prisma/
+
+# Install app dependencies
 RUN npm install
 
-# Copying source files
-COPY . /usr/src/app
+COPY . .
 
-# Building app
 RUN npm run build
+
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/prisma ./prisma
+
 EXPOSE 3000
 
-RUN su node -c "yarn global add prisma"
-
 # Running the app
-CMD "npm" "run" "dev"
+CMD [  "npm", "run", "start:migrate:prod" ]
