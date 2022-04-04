@@ -16,7 +16,7 @@
 			"previewLimit": 50,
 			"server": "localhost",
 			"port": 5432,
-			"database": "postgres",
+			"database": "next_auth_blog",
 			"username": "postgres",
 			"password": "postgres"
 		  }
