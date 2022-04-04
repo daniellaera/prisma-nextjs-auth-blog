@@ -21,7 +21,7 @@
 			"password": "postgres"
 		  }
 		],
-		"remote.containers.dotfiles.repository": "https://github.com/daniellaera/test-dotfiles.git",
+		"remote.containers.dotfiles.repository": "https://github.com/daniellaera/dotfiles.git",
 		"workbench.editor.titleScrollbarSizing": "large"
 	  },
 

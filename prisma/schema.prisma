@@ -5,7 +5,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = env("PRISMA_NEXTJS_BLOG_DATABASE_URL")
 }
 
 model Post {

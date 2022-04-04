@@ -35,8 +35,8 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
     }),
     */
       GithubProvider({
-        clientId: process.env.GITHUB_ID,
-        clientSecret: process.env.GITHUB_SECRET,
+        clientId: process.env.PRISMA_NEXTJS_BLOG_GITHUB_ID,
+        clientSecret: process.env.PRISMA_NEXTJS_BLOG_GITHUB_SECRET,
         // https://docs.github.com/en/developers/apps/building-oauth-apps/scopes-for-oauth-apps
       }),
     ],
