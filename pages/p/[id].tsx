@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import { GetServerSideProps } from "next";
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import { Button } from "@chakra-ui/button";
 import { CheckCircleIcon, DeleteIcon } from "@chakra-ui/icons";
@@ -26,6 +26,23 @@ import {
 } from "@chakra-ui/react";
 import Layout from "../../components/Layout";
 import prisma from "../../lib/prisma";
+import { gql, useQuery } from "@apollo/client";
+
+const PostQuery = gql`
+  query PostQuery($postId: String!) {
+    post(postId: $postId) {
+      id
+      createdAt
+      title
+      content
+      published
+      author {
+        id
+        name
+      }
+    }
+  }
+`
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const post = await prisma.post.findUnique({
@@ -93,12 +110,20 @@ export const BlogAuthor: React.FC<BlogAuthorProps> = (props) => {
       />
       <Text fontWeight="medium">{props.name}</Text>
       <Text>—</Text>
-      <Text>{props.date.toLocaleDateString()}</Text>
+      {/* <Text>{props.date.toLocaleDateString()}</Text> */}
+      <Text>{props.date}</Text>
     </HStack>
   );
 };
 
 const Post: React.FC<PostProps> = (props) => {
+  const postId = useRouter().query.id
+
+  // TODO: we should find a method for loading
+  const { loading: loader, error, data } = useQuery(PostQuery, {
+    variables: { postId },
+  })
+
   const { data: session, status } = useSession();
   const loading = status === "loading";
 
@@ -113,6 +138,11 @@ const Post: React.FC<PostProps> = (props) => {
 
   if (loading) {
     return <div>Authenticating ...</div>;
+  }
+
+  if (loader) {
+    console.log("loading the useQuery")
+    return <div>Loading ...</div>
   }
 
   const userHasValidSession = Boolean(session);
@@ -227,7 +257,7 @@ const Post: React.FC<PostProps> = (props) => {
               <Text as="p" marginTop="2" color={color} fontSize="lg">
                 {props.content}
               </Text>
-              <BlogAuthor name={props.author.name} date={props.createdAt} />
+              <BlogAuthor name={data.post.author.name} date={data.post.createdAt} />
 
               <Stack spacing={10}>
                 <Stack

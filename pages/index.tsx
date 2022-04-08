@@ -16,7 +16,23 @@ import { useColorModeValue } from "@chakra-ui/system";
 import Router from "next/router";
 import { useSession } from "next-auth/react";
 import { Avatar, Spinner } from "@chakra-ui/react";
-import prisma from "../lib/prisma";
+import { gql, useQuery } from "@apollo/client";
+
+const FeedQuery = gql`
+  query FeedQuery {
+    feed {
+      id
+      createdAt
+      title
+      content
+      published
+      author {
+        id
+        name
+      }
+    }
+  }
+`
 
 interface BlogAuthorPost {
   date: Date;
@@ -45,45 +61,26 @@ export const BlogAuthor: React.FC<BlogAuthorPost> = (props) => {
       />
       <Text fontWeight="medium">{props.name}</Text>
       <Text>—</Text>
-      <Text>{props.date.toLocaleDateString()}</Text>
+      {/* <Text>{props.date.toLocaleDateString()}</Text> */}
+      <Text>{props.date}</Text>
     </HStack>
   );
 };
 
-export const getStaticProps: GetStaticProps = async () => {
-  const feed = await prisma.post.findMany({
-    where: {
-      published: true,
-    },
-    include: {
-      author: {
-        select: { name: true },
-      },
-    },
-  });
-  return {
-    props: { feed },
-  };
-};
+const Blog = () => {
+  const { loading, error, data } = useQuery(FeedQuery, {
+    fetchPolicy: "cache-and-network",
+  })
 
-export type PostProps = {
-  id: number;
-  title: string;
-  author: {
-    name: string;
-    email: string;
-  } | null;
-  content: string;
-  published: boolean;
-  createdAt: Date;
-};
-
-type Props = {
-  feed: PostProps[];
-};
-
-const Blog: React.FC<Props> = (props) => {
   const color = useColorModeValue("gray.700", "gray.200");
+  const bgColor = useColorModeValue("blue.50", "blue.900")
+
+  if (loading) {
+    return <div>Loading ...</div>
+  }
+  if (error) {
+    return <div>Error: {error.message}</div>
+  }
   return (
     <Layout>
       <Container maxW="container.xl" py={12}>
@@ -94,18 +91,18 @@ const Blog: React.FC<Props> = (props) => {
               color={"blue.400"}
               fontWeight={600}
               fontSize={"sm"}
-              bg={useColorModeValue("blue.50", "blue.900")}
+              bg={bgColor}
               p={2}
               alignSelf={"flex-start"}
               rounded={"md"}
             >
-              {props.feed.length !== 0 ? "Public Feed" : "No Feed"}
+              {data.feed.length !== 0 ? "Public Feed" : "No Feed"}
             </Text>
           </Stack>
         </SimpleGrid>
       </Container>
 
-      {props.feed.map((post) => (
+      {data.feed.map((post) => (
         <Container
           key={post.id}
           maxW="container.xl"
